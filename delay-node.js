@@ -14,9 +14,9 @@ define(['require'], function() {
                     label: 'ms',
                     range: {
                         min: 0,
-                        default: 22,
+                        default: 0,
                         max: 5000
-                    },
+                    }
                 }
             }
         }
