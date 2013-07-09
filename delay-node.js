@@ -29,7 +29,7 @@ define(['require'], function() {
         this.audioDestination = args.audioDestinations[0];
         this.context = args.audioContext;
 
-        this.delayNode = this.context.createDelay(pluginConf.hostParameters.parameters.range.max / 1000);
+        this.delayNode = this.context.createDelay(pluginConf.hostParameters.parameters.delayTime.range.max / 1000);
         
         this.audioSource.connect(this.delayNode);
         this.delayNode.connect(this.audioDestination);
