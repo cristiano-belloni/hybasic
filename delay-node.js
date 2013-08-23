@@ -29,6 +29,17 @@ define(['require'], function() {
         this.audioDestination = args.audioDestinations[0];
         this.context = args.audioContext;
 
+        if (args.initialState && args.initialState.data) {
+            /* Load data */
+            this.pluginState = args.initialState.data;    
+        }
+        else {
+            /* Use default data */
+            this.pluginState = {
+                delayTime: 0
+            };
+        }
+
         this.delayNode = this.context.createDelay(pluginConf.hostParameters.parameters.delayTime.range.max / 1000);
         
         this.audioSource.connect(this.delayNode);
@@ -36,10 +47,16 @@ define(['require'], function() {
 
         /* Parameter callbacks */
         this.onParmChange = function (id, value) {
+            this.pluginState[id] = value;
             if (id === 'delayTime') {
                 this.delayNode.delayTime.value = value / 1000;
             }
         }
+
+        var saveState = function () {
+            return { data: this.pluginState };
+        };
+        args.hostInterface.setSaveState (saveState);
 
         // Initialization made it so far: plugin is ready.
         args.hostInterface.setInstanceStatus ('ready');
