@@ -82,11 +82,11 @@ define(['require'], function() {
         else {
             /* Use default data */
             this.pluginState = {
-                threshold: pluginConf.hostParameters.threshold.range.default,
-                knee: pluginConf.hostParameters.knee.range.default,
-                ratio: pluginConf.hostParameters.ratio.range.default,
-                attack: pluginConf.hostParameters.attack.range.default,
-                release: pluginConf.hostParameters.release.range.default
+                threshold: pluginConf.hostParameters.parameters.threshold.range.default,
+                knee: pluginConf.hostParameters.parameters.knee.range.default,
+                ratio: pluginConf.hostParameters.parameters.ratio.range.default,
+                attack: pluginConf.hostParameters.parameters.attack.range.default,
+                release: pluginConf.hostParameters.parameters.release.range.default
             };
         }
 
