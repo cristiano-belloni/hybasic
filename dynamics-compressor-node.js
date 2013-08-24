@@ -65,28 +65,7 @@ define(['require'], function() {
         this.audioDestination = args.audioDestinations[0];
         this.context = args.audioContext;
 
-        if (args.initialState && args.initialState.data) {
-            /* Load data */
-            this.pluginState = args.initialState.data;
-            for (param in args.initialState.data) {
-                if (args.initialState.data.hasOwnProperty(param)) {
-                    args.hostInterface.setParm (param, args.initialState.data[param]);
-                }
-            }
-        }
-        else {
-            /* Use default data */
-            this.pluginState = {
-                delayTime: 0
-            };
-        }
-
-        this.compNode = this.context.createDynamicsCompressor();
-        
-        this.audioSource.connect(this.compNode);
-        this.compNode.connect(this.audioDestination);
-
-        /* Parameter callbacks */
+        /* Parameter callback */
         var onParmChange = function (id, value) {
             this.pluginState[id] = value;
             var val = value;
@@ -95,6 +74,33 @@ define(['require'], function() {
             }
             this.compNode[id].value = val;
         };
+
+        if (args.initialState && args.initialState.data) {
+            /* Load data */
+            this.pluginState = args.initialState.data;
+        }
+        else {
+            /* Use default data */
+            this.pluginState = {
+                threshold: pluginConf.hostParameters.enabled.threshold.range.default,
+                knee: pluginConf.hostParameters.enabled.knee.range.default,
+                ratio: pluginConf.hostParameters.enabled.ratio.range.default,
+                attack: pluginConf.hostParameters.enabled.attack.range.default,
+                release: pluginConf.hostParameters.enabled.release.range.default
+            };
+        }
+
+        for (param in this.pluginState) {
+            if (this.pluginState.hasOwnProperty(param)) {
+                args.hostInterface.setParm (param, this.pluginState.data[param]);
+                onParmChange (param, this.pluginState.data[param]);
+            }
+        }
+
+        this.compNode = this.context.createDynamicsCompressor();
+        
+        this.audioSource.connect(this.compNode);
+        this.compNode.connect(this.audioDestination);
 
         var saveState = function () {
             return { data: this.pluginState };
