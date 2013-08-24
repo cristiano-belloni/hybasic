@@ -22,7 +22,7 @@ define(['require'], function() {
         }
     };
   
-    var pluginFunction = function(args, resources) {
+    var pluginFunction = function(args) {
         
         this.id = args.id;
         this.audioSource = args.audioSources[0];
@@ -35,11 +35,35 @@ define(['require'], function() {
         this.gainNode.connect(this.audioDestination);
 
         /* Parameter callbacks */
-        this.onParmChange = function (id, value) {
+        var onParmChange = function (id, value) {
             if (id === 'gain') {
                 this.gainNode.gain.value = value;
             }
         }
+
+        if (args.initialState && args.initialState.data) {
+            /* Load data */
+            this.pluginState = args.initialState.data;
+        }
+        else {
+            /* Use default data */
+            this.pluginState = {
+                gain: pluginConf.hostParameters.parameters.gain.range.default
+            };
+        }
+
+        for (param in this.pluginState) {
+            if (this.pluginState.hasOwnProperty(param)) {
+                args.hostInterface.setParm (param, this.pluginState[param]);
+                onParmChange.apply (this, [param, this.pluginState[param]]);
+            }
+        }
+
+        var saveState = function () {
+            return { data: this.pluginState };
+        };
+        args.hostInterface.setSaveState (saveState);
+        args.hostInterface.setHostCallback (onParmChange);
 
         // Initialization made it so far: plugin is ready.
         args.hostInterface.setInstanceStatus ('ready');

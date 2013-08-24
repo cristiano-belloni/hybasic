@@ -22,7 +22,7 @@ define(['require'], function() {
         }
     };
   
-    var pluginFunction = function(args, resources) {
+    var pluginFunction = function(args) {
         
         this.id = args.id;
         this.audioSource = args.audioSources[0];
