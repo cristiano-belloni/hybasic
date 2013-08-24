@@ -31,7 +31,8 @@ define(['require'], function() {
 
         if (args.initialState && args.initialState.data) {
             /* Load data */
-            this.pluginState = args.initialState.data;    
+            this.pluginState = args.initialState.data;
+            args.hostInterface.setParm ('delayTime', args.initialState.data.delayTime);
         }
         else {
             /* Use default data */
