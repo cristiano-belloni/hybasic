@@ -65,19 +65,42 @@ define(['require'], function() {
         this.audioDestination = args.audioDestinations[0];
         this.context = args.audioContext;
 
+        if (args.initialState && args.initialState.data) {
+            /* Load data */
+            this.pluginState = args.initialState.data;
+            for (param in args.initialState.data) {
+                if (args.initialState.data.hasOwnProperty(param)) {
+                    args.hostInterface.setParm (param, args.initialState.data[param]);
+                }
+            }
+        }
+        else {
+            /* Use default data */
+            this.pluginState = {
+                delayTime: 0
+            };
+        }
+
         this.compNode = this.context.createDynamicsCompressor();
         
         this.audioSource.connect(this.compNode);
         this.compNode.connect(this.audioDestination);
 
         /* Parameter callbacks */
-        this.onParmChange = function (id, value) {
+        var onParmChange = function (id, value) {
+            this.pluginState[id] = value;
             var val = value;
             if ((id === 'attack') || (id === 'release')) {
                 val /= 1000;
             }
             this.compNode[id].value = val;
-        }
+        };
+
+        var saveState = function () {
+            return { data: this.pluginState };
+        };
+        args.hostInterface.setSaveState (saveState);
+        args.hostInterface.setHostCallback (onParmChange);
 
         // Initialization made it so far: plugin is ready.
         args.hostInterface.setInstanceStatus ('ready');
