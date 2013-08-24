@@ -64,6 +64,9 @@ define(['require'], function() {
         this.audioSource = args.audioSources[0];
         this.audioDestination = args.audioDestinations[0];
         this.context = args.audioContext;
+        this.compNode = this.context.createDynamicsCompressor();
+        this.audioSource.connect(this.compNode);
+        this.compNode.connect(this.audioDestination);
 
         /* Parameter callback */
         var onParmChange = function (id, value) {
@@ -96,11 +99,6 @@ define(['require'], function() {
                 onParmChange.apply (this, [param, this.pluginState[param]]);
             }
         }
-
-        this.compNode = this.context.createDynamicsCompressor();
-        
-        this.audioSource.connect(this.compNode);
-        this.compNode.connect(this.audioDestination);
 
         var saveState = function () {
             return { data: this.pluginState };
