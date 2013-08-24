@@ -93,7 +93,7 @@ define(['require'], function() {
         for (param in this.pluginState) {
             if (this.pluginState.hasOwnProperty(param)) {
                 args.hostInterface.setParm (param, this.pluginState[param]);
-                onParmChange (param, this.pluginState[param]);
+                onParmChange.apply (this, [param, this.pluginState[param]]);
             }
         }
 
