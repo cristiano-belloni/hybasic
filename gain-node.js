@@ -36,6 +36,7 @@ define(['require'], function() {
 
         /* Parameter callbacks */
         var onParmChange = function (id, value) {
+            this.pluginState[id] = value;
             if (id === 'gain') {
                 this.gainNode.gain.value = value;
             }
