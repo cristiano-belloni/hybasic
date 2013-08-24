@@ -46,7 +46,7 @@ define(['require'], function() {
         this.delayNode.connect(this.audioDestination);
 
         /* Parameter callbacks */
-        this.onParmChange = function (id, value) {
+        var onParmChange = function (id, value) {
             this.pluginState[id] = value;
             if (id === 'delayTime') {
                 this.delayNode.delayTime.value = value / 1000;
@@ -57,6 +57,7 @@ define(['require'], function() {
             return { data: this.pluginState };
         };
         args.hostInterface.setSaveState (saveState);
+        args.hostInterface.setHostCallback (onParmChange);
 
         // Initialization made it so far: plugin is ready.
         args.hostInterface.setInstanceStatus ('ready');
