@@ -38,20 +38,6 @@ define(['require'], function() {
         this.audioDestination = args.audioDestinations[0];
         this.context = args.audioContext;
 
-        if (args.initialState && args.initialState.data) {
-            /* Load data */
-            this.pluginState = args.initialState.data;
-            args.hostInterface.setParm ('delayTimeS', args.initialState.data.delayTimeS);
-            args.hostInterface.setParm ('delayTimeMs', args.initialState.data.delayTimeMs);
-        }
-        else {
-            /* Use default data */
-            this.pluginState = {
-                delayTimeS: pluginConf.hostParameters.parameters.delayTimeS.range.default,
-                delayTimeMs: pluginConf.hostParameters.parameters.delayTimeMs.range.default
-            };
-        }
-
         this.delayNode = this.context.createDelay(pluginConf.hostParameters.parameters.delayTimeS.range.max + pluginConf.hostParameters.parameters.delayTimeMs.range.max / 1000);
         
         this.audioSource.connect(this.delayNode);
@@ -62,6 +48,25 @@ define(['require'], function() {
             this.pluginState[id] = value;
             var delay = this.pluginState.delayTimeS + this.pluginState.delayTimeMs / 1000;
             this.delayNode.delayTime.value = delay;
+        }
+
+        if (args.initialState && args.initialState.data) {
+            /* Load data */
+            this.pluginState = args.initialState.data;
+        }
+        else {
+            /* Use default data */
+            this.pluginState = {
+                delayTimeS: pluginConf.hostParameters.parameters.delayTimeS.range.default,
+                delayTimeMs: pluginConf.hostParameters.parameters.delayTimeMs.range.default
+            };
+        }
+
+        for (param in this.pluginState) {
+            if (this.pluginState.hasOwnProperty(param)) {
+                args.hostInterface.setParm (param, this.pluginState[param]);
+                onParmChange.apply (this, [param, this.pluginState[param]]);
+            }
         }
 
         var saveState = function () {
