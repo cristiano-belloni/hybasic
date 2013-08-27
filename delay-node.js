@@ -9,13 +9,22 @@ define(['require'], function() {
         hostParameters : {
             enabled: true,
             parameters: {
-                delayTime: {
-                    name: ['Delay'],
+                delayTimeS: {
+                    name: ['Seconds'],
                     label: 'ms',
                     range: {
                         min: 0,
                         default: 0,
-                        max: 5000
+                        max: 5
+                    }
+                },
+                delayTimeMs: {
+                    name: ['Milliseconds'],
+                    label: 'ms',
+                    range: {
+                        min: 0,
+                        default: 0,
+                        max: 1000
                     }
                 }
             }
@@ -32,16 +41,18 @@ define(['require'], function() {
         if (args.initialState && args.initialState.data) {
             /* Load data */
             this.pluginState = args.initialState.data;
-            args.hostInterface.setParm ('delayTime', args.initialState.data.delayTime);
+            args.hostInterface.setParm ('delayTimeS', args.initialState.data.delayTimeS);
+            args.hostInterface.setParm ('delayTimeMs', args.initialState.data.delayTimeMs);
         }
         else {
             /* Use default data */
             this.pluginState = {
-                delayTime: 0
+                delayTimeS: pluginConf.hostParameters.parameters.delayTimeS.range.default,
+                delayTimeMs: pluginConf.hostParameters.parameters.delayTimeMs.range.default
             };
         }
 
-        this.delayNode = this.context.createDelay(pluginConf.hostParameters.parameters.delayTime.range.max / 1000);
+        this.delayNode = this.context.createDelay(pluginConf.hostParameters.parameters.delayTimeS.range.max + pluginConf.hostParameters.parameters.delayTimeMs.range.max / 1000);
         
         this.audioSource.connect(this.delayNode);
         this.delayNode.connect(this.audioDestination);
@@ -49,9 +60,8 @@ define(['require'], function() {
         /* Parameter callbacks */
         var onParmChange = function (id, value) {
             this.pluginState[id] = value;
-            if (id === 'delayTime') {
-                this.delayNode.delayTime.value = value / 1000;
-            }
+            var delay = this.pluginState.delayTimeS + this.pluginState.delayTimeMs / 1000;
+            this.delayNode.delayTime.value = delay;
         }
 
         var saveState = function () {
