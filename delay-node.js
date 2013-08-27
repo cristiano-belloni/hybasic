@@ -10,8 +10,8 @@ define(['require'], function() {
             enabled: true,
             parameters: {
                 delayTimeS: {
-                    name: ['Seconds'],
-                    label: 'ms',
+                    name: ['sec.'],
+                    label: 's',
                     range: {
                         min: 0,
                         default: 0,
@@ -19,7 +19,7 @@ define(['require'], function() {
                     }
                 },
                 delayTimeMs: {
-                    name: ['Milliseconds'],
+                    name: ['msec.'],
                     label: 'ms',
                     range: {
                         min: 0,
