@@ -1,7 +1,7 @@
 define(['require'], function() {
   
     var pluginConf = {
-        name: "Dyn. Compressor Node",
+        name: "Compressor Node",
         osc: false,
         audioOut: 1,
         audioIn: 1,
