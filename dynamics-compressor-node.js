@@ -103,8 +103,8 @@ define(['require'], function() {
         var saveState = function () {
             return { data: this.pluginState };
         };
-        args.hostInterface.setSaveState (saveState);
-        args.hostInterface.setHostCallback (onParmChange);
+        args.hostInterface.setSaveState (saveState.bind(this));
+        args.hostInterface.setHostCallback (onParmChange.bind(this));
 
         // Initialization made it so far: plugin is ready.
         args.hostInterface.setInstanceStatus ('ready');
