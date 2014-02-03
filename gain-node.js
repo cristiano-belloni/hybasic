@@ -2,7 +2,6 @@ define(['require'], function() {
   
     var pluginConf = {
         name: "Gain Node",
-        osc: false,
         audioOut: 1,
         audioIn: 1,
         version: '0.0.1',
@@ -41,7 +40,7 @@ define(['require'], function() {
             if (id === 'gain') {
                 this.gainNode.gain.value = value;
             }
-        }
+        };
 
         if (args.initialState && args.initialState.data) {
             /* Load data */
@@ -54,7 +53,7 @@ define(['require'], function() {
             };
         }
 
-        for (param in this.pluginState) {
+        for (var param in this.pluginState) {
             if (this.pluginState.hasOwnProperty(param)) {
                 args.hostInterface.setParm (param, this.pluginState[param]);
                 onParmChange.apply (this, [param, this.pluginState[param]]);

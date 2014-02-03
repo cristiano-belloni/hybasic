@@ -2,7 +2,6 @@ define(['require'], function() {
   
     var pluginConf = {
         name: "Compressor Node",
-        osc: false,
         audioOut: 1,
         audioIn: 1,
         version: '0.0.1',
@@ -94,7 +93,7 @@ define(['require'], function() {
             };
         }
 
-        for (param in this.pluginState) {
+        for (var param in this.pluginState) {
             if (this.pluginState.hasOwnProperty(param)) {
                 args.hostInterface.setParm (param, this.pluginState[param]);
                 onParmChange.apply (this, [param, this.pluginState[param]]);
