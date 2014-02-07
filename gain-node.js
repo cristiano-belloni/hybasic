@@ -35,10 +35,24 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
         this.gainNode.connect(this.audioDestination);
 
 
-        this.modelToAudio = function (param) {
-            if (param === 'gain') {
-                this.gainNode.gain.value = this.pluginState[param];
+        this.setAudioParm = function (param, value, when) {
+            switch (param) {
+                case 'gain':
+                    if (when) {
+                        this.gainNode.gain.setValueAtTime(value, when);
+                    }
+                    else {
+                        this.gainNode.gain.setValueAtTime(value, this.context.currentTime);
+                    }
+                break;
             }
+        };
+        this.getAudioParam = function (param) {
+            return this.gainNode.gain.value;
+        };
+
+        this.modelToAudio = function (param) {
+            this.setAudioParm(param, this.pluginState[param], 0);
         };
         this.setModel = function (param, value) {
             this.pluginState[param] = value;
@@ -47,9 +61,7 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
             args.hostInterface.setParm (param, this.pluginState[param]);
         };
         this.audioToModel = function (param) {
-            if (param === 'gain') {
-                this.setModel(param, this.gainNode.gain.value);
-            }
+                this.setModel(param, this.getAudioParam(param));
         };
         this.animate = function (param) {
             // This changes the plugin state and the GUI in the future, loosely 
@@ -92,7 +104,7 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
             
             if (message.type === 'controlchange') {
                 /* http://tweakheadz.com/midi-controllers/ */
-                // Using undefined controls
+                // Using control number 21
                 if (message.control === 21) {
                         parmName = "gain";
                 }
@@ -121,9 +133,7 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
                     // Deferred
                     setTimeout (this.animate, delta * 1000, parmName);
                     // This automates audio in the future.
-                    if (parmName === 'gain') {
-                        this.gainNode.gain.setValueAtTime(setValue, when);
-                    }
+                    this.setAudioParm(parmName, setValue, when);
                 }
             }
         };
