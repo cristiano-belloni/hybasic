@@ -21,8 +21,8 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
             }
         }
     };
-  
-    var pluginFunction = function(args) {
+
+    var initPlugin = function(args) {
         
         this.id = args.id;
         this.audioSource = args.audioSources[0];
@@ -148,15 +148,7 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
         // Initialization made it so far: plugin is ready.
         args.hostInterface.setInstanceStatus ('ready');
     };
-    
-    
-    var initPlugin = function(initArgs) {
-        var args = initArgs;
 
-        pluginFunction.call (this, args);
-    
-    };
-        
     return {
         initPlugin: initPlugin,
         pluginConf: pluginConf
