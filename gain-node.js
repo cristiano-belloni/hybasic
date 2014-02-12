@@ -139,6 +139,12 @@ define(['require', 'github:mout/mout@master/src/function/throttle'], function(re
         };
         args.MIDIHandler.setMIDICallback (onMIDIMessage.bind (this));
 
+        // Destructor function
+        args.hostInterface.setDestructor (function () {
+            this.gainNode.disconnect();
+            this.audioSource.disconnect();
+        }.bind(this));
+
         var saveState = function () {
             return { data: this.pluginState };
         };
