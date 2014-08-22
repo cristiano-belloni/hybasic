@@ -1,4 +1,4 @@
-define(['require', 'github:mout/mout@master/src/function/throttle'], function(require, throttle) {
+define(['require', 'github:mout/mout@0.9.1/src/function/throttle'], function(require, throttle) {
   
     var pluginConf = {
         name: "Gain Node",
